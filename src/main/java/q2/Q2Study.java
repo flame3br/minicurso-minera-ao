@@ -3,35 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package q1;
+package q2;
 
 import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
+import org.repodriller.filter.commit.OnlyInMainBranch;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.persistence.csv.CSVFile;
-import org.repodriller.scm.GitRemoteRepository;
 import org.repodriller.scm.GitRepository;
 
 /**
  *
  * @author a1857355
  */
-public class Q1Study implements Study{
-    
+public class Q2Study implements Study{
+   
     public static void main(String[] args) {
-        new RepoDriller().start(new Q1Study());
+        new RepoDriller().start(new Q2Study());
     }
 
     @Override
     public void execute() {
         new RepositoryMining()
-   /*           .in(GitRepository.allProjectsIn("/home/todos/alunos/cm/a1857355/minicurso/clones")) */
-                .in(GitRemoteRepository
-                        .hostedOn("https://github.com/Jmallone/APS-Estrutura-de-Dados-2017-1.git")
-                        .buildAsSCMRepository())
-                .through(Commits.all())
-                .process(new CommitVisitor(), new CSVFile("/home/todos/alunos/cm/a1857355/minicurso/clones/q1.csv"))
+                .in(GitRepository.singleProject("/home/todos/alunos/cm/a1857355/minicurso/clones/mypy"))
+                .through(Commits.monthly(0))
+                .filters(new OnlyInMainBranch())
+                .process(new BugVisitor(), new CSVFile("/home/todos/alunos/cm/a1857355/minicurso/clones/q2_mypy.csv"))
                 .mine();
     }
     
